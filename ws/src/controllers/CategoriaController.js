@@ -1,4 +1,4 @@
-const { Categoria } = require('../models');
+const  { Categoria }  = require('../models');
 const fs = require('fs');
 const path = require('path');
 
@@ -6,8 +6,6 @@ module.exports = {
   // Criar categoria (ADMIN)
   async create(req, res) {
     try {
-      console.log(rq.file);
-      
       const { titulo, descricao } = req.body;
 
       const categoria = await Categoria.create({

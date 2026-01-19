@@ -61,20 +61,27 @@ export default function LivroForm({ onSubmit, categorias, livro }) {
       </div>
 
       <div className="col-md-3">
+        <input className="form-control" placeholder="Descriçao"
+          value={form.descricao}
+          onChange={e => setForm({ ...form, descricao: e.target.value })}
+          required />
+      </div>
+
+      <div className="col-md-3">
         <input className="form-control" placeholder="Autor"
           value={form.autor}
           onChange={e => setForm({ ...form, autor: e.target.value })}
           required />
       </div>
 
-      <div className="col-md-2">
+      <div className="col-md-3">
         <input type="number" className="form-control" placeholder="Preço"
           value={form.preco}
           onChange={e => setForm({ ...form, preco: e.target.value })}
           required />
       </div>
 
-      <div className="col-md-2">
+      <div className="col-md-3">
         <select className="form-select"
           value={form.categoria_id}
           onChange={e => setForm({ ...form, categoria_id: e.target.value })}
@@ -86,7 +93,7 @@ export default function LivroForm({ onSubmit, categorias, livro }) {
         </select>
       </div>
 
-      <div className="col-md-2">
+      <div className="col-md-3">
         <input type="file" className="form-control"
           accept="image/*"
           onChange={e => setCapa(e.target.files[0])} />

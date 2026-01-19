@@ -38,10 +38,19 @@ module.exports = {
 
   // LISTAR POR CATEGORIA
   async listByCategoria(req, res) {
+    const { id } = req.params;
+
+    console.log('ID recebido:', id); // ✅ Adicione isso
     const livros = await Livro.findAll({
-      where: { categoria_id: req.params.categoriaId },
+      where: { categoria_id: id },
       include: Categoria
     });
+
+    // ✅ Correto - verifica se o array está vazio
+    if (livros.length === 0) {
+      return res.status(404).json({ erro: 'Nenhum livro encontrado nesta categoria' });
+    }
+
     res.json(livros);
   },
 

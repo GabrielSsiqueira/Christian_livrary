@@ -5,8 +5,8 @@ const path = require('path');
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, file.mimetype === 'application/pdf'
-      ? 'src/uploads/livros'
-      : 'src/uploads/capas'
+      ? 'uploads/livros'
+      : 'uploads/capas'
     );
   },
   filename: (req, file, cb) => {

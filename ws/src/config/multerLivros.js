@@ -4,9 +4,9 @@ const path = require('path');
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === 'arquivo') {
-      cb(null, 'src/uploads/livros');
+      cb(null, 'uploads/livros');
     } else {
-      cb(null, 'src/uploads/capas');
+      cb(null, 'uploads/capas');
     }
   },
   filename: (req, file, cb) => {

@@ -65,9 +65,10 @@ export default function Usuarios() {
         </form>
       )}
 
-      <table className="table table-hover">
+      <table className="table table-hover table-striped table-bordered">
         <thead>
           <tr>
+            <th>Id</th>
             <th>Nome</th>
             <th>Email</th>
             <th>Tipo</th>
@@ -77,6 +78,7 @@ export default function Usuarios() {
         <tbody>
           {usuarios.map(u => (
             <tr key={u.id}>
+              <td>{u.id}</td>
               <td>{u.nome}</td>
               <td>{u.email}</td>
               <td>

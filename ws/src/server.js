@@ -26,9 +26,9 @@ app.use(express.urlencoded({ extended: true }));
    GARANTIR PASTAS DE UPLOAD
 ================================ */
 const uploadDirs = [
-  'src/uploads',
-  'src/uploads/capas',
-  'src/uploads/livros'
+  'uploads',
+  'uploads/capas',
+  'uploads/livros'
 ];
 
 uploadDirs.forEach(dir => {
@@ -37,7 +37,7 @@ uploadDirs.forEach(dir => {
   }
 });
 
-app.use('/uploads', express.static(path.resolve(__dirname, 'src/uploads')))
+app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')))
 
 /* ================================
    ROTAS

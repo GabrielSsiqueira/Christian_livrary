@@ -13,6 +13,5 @@ const Livro = sequelize.define('Livro', {
   formato: DataTypes.STRING
 });
 
-Livro.belongsTo(Categoria, { foreignKey: 'categoria_id' });
 
 module.exports = Livro;

@@ -5,11 +5,26 @@ import { getLivrosPorCategoria } from '../api/livroApi';
 export default function LivrosPorCategoria() {
   const { id } = useParams();
   const [livros, setLivros] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getLivrosPorCategoria(id).then(res => setLivros(res.data));
-  }, [id]);
+    if(!id) return;
+
+    console.log("id da categoria", id);
+    getLivrosPorCategoria(id)
+    .then((res) => {
+      setLivros(res.data);
+    })
+    .catch((err) => {
+      console.error("error ao buscar livros", err);
+    })
+    .finally(() => {
+      setLoading(false);
+    })
+  },[id])
+
+  if(loading) return <p>Carregando livros</p>;
 
   return (
     <div className="container">
@@ -19,19 +34,21 @@ export default function LivrosPorCategoria() {
         {livros.map(l => (
           <div className="col-md-3 mb-4" key={l.id}>
             <div className="card h-100 shadow-sm">
-              {l.capa && (
+              {l.capa ? (
                 <img
-                  src={`http://localhost:3000/uploads/capas/${l.imagem}`}
+                  src={`${import.meta.env.VITE_API_URL}/uploads/capas/${l.capa}`}
                   className="card-img-top"
                   style={{ height: 180, objectFit: 'cover' }}
                   alt={l.titulo}
                 />
+              ):(
+                'Sem Imagem'
               )}
 
               <div className="card-body">
-                <h6>{l.titulo}</h6>
+                <h6 className="text-center">{l.titulo}</h6>
                 <p className="text-muted">{l.autor}</p>
-                <p className="fw-bold">R$ {l.preco}</p>
+                <p className="fw-bold text-center">R$ {l.preco}</p>
               </div>
 
               <div className="card-footer bg-white border-0">

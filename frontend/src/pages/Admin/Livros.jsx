@@ -39,31 +39,31 @@ export default function Livros() {
         livro={editando}
       />
 
-      <table className="table table-hover mt-4">
+      <table className="table table-hover table-striped table-bordered mt-4">
         <thead>
           <tr>
+            <th>Id</th>
             <th>Título</th>
             <th>Autor</th>
             <th>Preço</th>
             <th>Capa</th>
             <th>Arquivo</th>
+            <th>Categoria</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
           {livros.map(l => (
             <tr key={l.id}>
+              <td>{l.id}</td>
               <td>{l.titulo}</td>
               <td>{l.autor}</td>
               <td>R$ {l.preco}</td>
-              <td>
-                {l.imagem && (
-                  <img
-                    src={`http://localhost:3000/uploads/capas/${l.imagem}`}
-                    width="50"
-                    alt=""
-                  />
-                )}
+              <td>{l.capa ? (
+                <img src={`${import.meta.env.VITE_API_URL}/uploads/capas/${l.capa}`} width={50} alt="" />
+              ): (
+                'sem imagem'
+              )}
               </td>
 
               <td>
@@ -76,19 +76,21 @@ export default function Livros() {
                   Abrir
                 </a>
               </td>
+              <td>{l.categoria_id}</td>
 
-              <td>
+              <td className="btn-group">
                 <button
                   className="btn btn-sm btn-warning me-2"
                   onClick={() => setEditando(l)}
                 >
-                  Editar
+                  <i className="bi bi-pencil-square" />
                 </button>
+
                 <button
                   className="btn btn-sm btn-danger"
                   onClick={() => deleteLivro(l.id).then(load)}
                 >
-                  Excluir
+                  <i className="bi bi-trash-fill" />
                 </button>
               </td>
             </tr>

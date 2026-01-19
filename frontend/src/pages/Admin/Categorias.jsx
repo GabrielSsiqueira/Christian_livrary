@@ -1,4 +1,4 @@
-import { useEffect, useState,  } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getCategorias,
   createCategoria,
@@ -40,7 +40,7 @@ export default function Categorias() {
 
       <CategoriaForm onSubmit={salvar} categoria={editando} />
 
-      <table className="table table-striped mt-4">
+      <table className="table table-hover table-bordered table-striped mt-4">
         <thead>
           <tr>
             <th>ID</th>
@@ -57,7 +57,11 @@ export default function Categorias() {
               <td>{c.titulo}</td>
               <td>{c.descricao}</td>
               <td>
-                {c.imagem}
+                {c.imagem ? (
+                  <img className="rounded-circle object-fit-cover" src={`${import.meta.env.VITE_API_URL}/uploads/categorias/${c.imagem}`} width={30} height={30} />
+                ): (
+                  'sem imagem'
+                )}
               </td>
               <td>
                 <button

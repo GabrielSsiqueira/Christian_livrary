@@ -6,8 +6,11 @@ const uploadCategoria = require('../config/multerCategoria');
 
 const auth = require('../middlewares/auth');
 const admin = require('../middlewares/admin');
+const cliente = require('../middlewares/admin');
 
 const Auth = require('../controllers/AuthController');
+const Dashboard = require('../controllers/DashboardController');
+const Usuario = require('../controllers/UsuarioController');
 const Categoria = require('../controllers/CategoriaController');
 const Livro = require('../controllers/LivroController');
 const Compra = require('../controllers/CompraController');
@@ -74,6 +77,8 @@ router.post('/auth/register', Auth.register);
  *         description: Token JWT
  */
 router.post('/auth/login', Auth.login);
+
+router.get('/usuarios/list', auth, admin, Usuario.list)
 
 /* =====================================================
    CATEGORIAS
@@ -186,7 +191,7 @@ router.delete('/categorias/:id',auth, admin, Categoria.delete);
  *     summary: Listar livros
  *     tags: [Livros]
  */
-router.get('/livros', auth, admin , Livro.list);
+router.get('/livros/list', auth, admin , Livro.list);
 
 
 /**
@@ -196,7 +201,7 @@ router.get('/livros', auth, admin , Livro.list);
  *     summary: Buscar livro por categoria
  *     tags: [Livros]
  */
-router.get('/livros/categoria/:id', auth, admin, Livro.listByCategoria);
+router.get('/livros/categoria/:id', Livro.listByCategoria);
 
 /**
  * @swagger
@@ -204,8 +209,18 @@ router.get('/livros/categoria/:id', auth, admin, Livro.listByCategoria);
  *   get:
  *     summary: Buscar livro por ID
  *     tags: [Livros]
- */
-router.get('/livros/:id',auth, admin, Livro.show);
+*/
+router.get('/livros/:id',auth, Livro.show);
+
+
+/**
+ * @swagger
+ * /livros/delete/{id}:
+ *   delete:
+ *     summary: Deletar livro por ID
+ *     tags: [Livros]
+*/
+router.delete('/livros/delete/:id', auth, admin , Livro.delete);
 
 /**
  * @swagger
@@ -232,15 +247,52 @@ router.get('/livros/:id',auth, admin, Livro.show);
  *     responses:
  *       200:
  *         description: Livro criado
- */
+*/
 router.post(
-  '/livros',
+  '/livros/create',
+  auth,
   admin,
   uploadLivro.fields([
     { name: 'capa', maxCount: 1 },
     { name: 'arquivo', maxCount: 1 }
   ]),
   Livro.create
+);
+
+/**
+ * @swagger
+ * /livros:
+ *   post:
+ *     summary: Atualizar livro (Admin)
+ *     tags: [Livros]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required: [titulo, autor, preco, categoria_id, capa, arquivo]
+ *             properties:
+ *               titulo: { type: string }
+ *               autor: { type: string }
+ *               preco: { type: number }
+ *               categoria_id: { type: integer }
+ *               capa: { type: string, format: binary }
+ *               arquivo: { type: string, format: binary }
+ *     responses:
+ *       200:
+ *         description: Livro Atualizado
+*/
+
+router.put(
+  '/livros/update/:id',
+  uploadLivro.fields([
+    { name: 'capa', maxCount: 1 },
+    { name: 'arquivo', maxCount: 1 }
+  ]),
+  Livro.update
 );
 
 /* =====================================================
@@ -320,46 +372,19 @@ router.put('/biblioteca/progresso', auth, Biblioteca.atualizarProgresso);
  */
 router.get('/biblioteca/download/:livroId', auth, Biblioteca.download);
 
+/* =====================================================
+  Painel Administrativo
+===================================================== */
 
 
-router.get('/dashboard', admin ,async (req, res) => {
+/**
+ * @swagger
+ * tags:
+ *   - name: Dashboard
+ *     description: Painel Administrativo
+*/
 
-  const totalUsuarios = await Usuario.count();
-  const totalLivros = await Livro.count();
-  const totalCompras = await Compra.count();
+router.get('/dashboard', auth, admin, Dashboard.list)
 
-  const faturamento = await Compra.sum('total', {
-    where: { status: 'pago' }
-  });
-
-  const comprasPorMes = await Compra.findAll({
-    attributes: [
-      [Sequelize.fn('strftime', '%Y-%m', Sequelize.col('createdAt')), 'mes'],
-      [Sequelize.fn('COUNT', Sequelize.col('id')), 'total']
-    ],
-    group: ['mes'],
-    order: [['mes', 'ASC']]
-  });
-
-  const livrosMaisVendidos = await ItemCompra.findAll({
-    attributes: [
-      'livro_id',
-      [Sequelize.fn('COUNT', Sequelize.col('livro_id')), 'total']
-    ],
-    include: [{ model: Livro, attributes: ['titulo'] }],
-    group: ['livro_id'],
-    order: [[Sequelize.literal('total'), 'DESC']],
-    limit: 5
-  });
-
-  res.json({
-    totalUsuarios,
-    totalLivros,
-    totalCompras,
-    faturamento: faturamento || 0,
-    comprasPorMes,
-    livrosMaisVendidos
-  });
-});
 
 module.exports = router;

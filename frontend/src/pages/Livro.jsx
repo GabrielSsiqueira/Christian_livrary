@@ -1,13 +1,9 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import api from '../api/api';
+import getLivrosPorId from '../api/livroApi';
 
 import { useAuth } from '../context/AuthContext';
 import { criarCompra } from '../api/compraApi';
-
-
-
-
 
 export default function Livro() {
   const { user } = useAuth();
@@ -25,7 +21,8 @@ export default function Livro() {
   const [livro, setLivro] = useState(null);
 
   useEffect(() => {
-    api.get(`/livros/${id}`).then(res => setLivro(res.data));
+    getLivrosPorId(id)
+    .then(res => setLivro(res.data));
   }, [id]);
 
   if (!livro) {
@@ -44,7 +41,7 @@ export default function Livro() {
         {/* Capa */}
         <div className="col-md-4">
           <img
-            src={`http://localhost:3000/uploads/${livro.imagem}`}
+            src={`${import.meta.env.VITE_API_URL}/uploads/capas/${livro.capa}`}
             alt={livro.titulo}
             className="img-fluid rounded shadow"
           />

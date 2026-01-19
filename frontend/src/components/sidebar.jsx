@@ -29,7 +29,7 @@ export default function Sidebar() {
           <h6 className="text-uppercase text-muted">Cliente</h6>
 
           <li className="nav-item">
-            <Link className={`nav-link ${isActive('/')}`} to="/">
+            <Link className={`nav-link ${isActive('/home')}`} to="/home">
               Início
             </Link>
           </li>
@@ -41,15 +41,16 @@ export default function Sidebar() {
               Catálogo
             </Link>
           </li>
+          
 
           <li className="nav-item">
-            <Link to="/minha-biblioteca" className="nav-link text-white">
+            <Link to="/minha-biblioteca" className={`nav-link ${isActive('/minha-biblioteca')}`}>
               Minha Biblioteca
             </Link>
           </li>
 
           <li className="nav-item">
-            <Link className={`nav-link ${isActive('/login')}`} to="/login">
+            <Link className={`nav-link ${isActive('/')}`} to="/">
               <i className={'bi bi-person-circle'}></i>
               Sair
             </Link>
